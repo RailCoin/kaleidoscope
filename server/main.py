@@ -8,13 +8,6 @@ import os
 
 APP_DIRECTORY = '/var/kaleidoscope'
 
-@methods.add
-async def ping():
-    return 'pong'
-
-def utcisodatestr():
-    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
-
 def app_version():
     p = os.path.join(APP_DIRECTORY, "gitversion.txt")
     if os.path.isfile(p):
@@ -22,6 +15,15 @@ def app_version():
             return f.read().rstrip()
     else:
         return 'unknown'
+
+APP_VERSION = app_version()
+
+@methods.add
+async def ping():
+    return 'pong'
+
+def utcisodatestr():
+    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
 
 async def handle(request):
     request = await request.text()
@@ -36,7 +38,7 @@ async def healthcheck(request):
     return web.Response(text=json.dumps({
         'service': 'kaleidoscope',
         'ok': True,
-        'version': app_version(),
+        'version': APP_VERSION,
         'date': utcisodatestr()
     }))
 
