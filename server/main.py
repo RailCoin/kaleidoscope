@@ -6,7 +6,7 @@ import datetime
 import json
 import os
 
-APP_DIRECTORY = '/var/kaleidoscope'
+APP_DIRECTORY = '/app'
 
 def app_version():
     p = os.path.join(APP_DIRECTORY, "gitversion.txt")
