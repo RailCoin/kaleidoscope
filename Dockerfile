@@ -17,15 +17,18 @@ RUN JOBS=max yarn install --non-interactive --frozen-lockfile
 # copy in application source
 COPY client/ .
 
-RUN git rev-parse --short HEAD > /app/gitversion.txt
 
 # run tests and compile sources
 RUN yarn test && yarn build
 
-RUN git
+WORKDIR /app
 # prune modules
 RUN yarn install --non-interactive --frozen-lockfile --production
 
+# save git short id
+WORKDIR /tmp
+COPY .git /tmp/
+RUN git rev-parse --short HEAD > /app/gitversion.txt
 
 ######################################################################################
 ##  Build Python Serverside App
