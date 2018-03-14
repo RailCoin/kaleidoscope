@@ -19,7 +19,7 @@ COPY client/ .
 
 
 # run tests and compile sources
-RUN yarn test && yarn build
+RUN CI=true yarn test && yarn build
 
 WORKDIR /app
 # prune modules
