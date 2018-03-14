@@ -1,11 +1,8 @@
-machine:
-    services:
-        - docker
+version: 2
 
-dependencies:
-    override:
-        - echo "Ignore CircleCI detected dependencies"
-
-test:
-    override:
-        - docker build -t steemit/kaleidoscope .
+jobs:
+    build:
+        steps:
+            - setup_remote_docker
+                version: 17.11.0-ce
+            - docker build -t steemit/kaleidoscope .
