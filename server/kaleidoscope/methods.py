@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 
-from aiohttp import web
 from jsonrpcserver.aio import methods
+from jsonrpcserver.exceptions import InvalidParams
 import datetime
 import json
 import os
+from kaleidoscope.state import KaleidoscopeState
 
-APP_DIRECTORY = '/app'
+from kaleidoscope.server import APP_STATE as state
 
-def app_version():
-    p = os.path.join(APP_DIRECTORY, "gitversion.txt")
-    if os.path.isfile(p):
-        with open(p,"r") as f:
-            return f.read().rstrip()
-    else:
-        return 'unknown'
-
-APP_VERSION = app_version()
+@methods.add
+async def propose_new_transaction(**kwargs):
+    if 'tx' not in kwargs:
+        raise InvalidParams()
+    # FIXME(sneak) write new transaction into app state
 
 @methods.add
 async def ping():
@@ -41,14 +38,6 @@ async def healthcheck(request):
         'version': APP_VERSION,
         'date': utcisodatestr()
     }))
-
-def main():
-    app = web.Application()
-    app.router.add_get('/.well-known/healthcheck.json', healthcheck)
-    app.router.add_post('/', handle)
-    # app.router.add_get('/', serveapp) TODO
-
-    web.run_app(app, port=os.environ.get('PORT',8080))
 
 if __name__ == '__main__':
     main()
