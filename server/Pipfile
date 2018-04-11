@@ -13,6 +13,7 @@ certifi = "*"
 sqlalchemy = "*"
 structlog = "*"
 "boto3" = "*"
+pytest = "*"
 
 
 [dev-packages]

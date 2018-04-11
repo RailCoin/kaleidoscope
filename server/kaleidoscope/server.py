@@ -6,10 +6,9 @@ from jsonrpcserver.exceptions import InvalidParams
 import datetime
 import json
 import os
-from kaleidoscope.state import KaleidoscopeState
+from kaleidoscope.state import KaleidoscopeStateManager
 
 APP_DIRECTORY = '/app'
-APP_STATE = None
 
 class KaleidoscopeHTTPServer(object):
 
@@ -17,7 +16,7 @@ class KaleidoscopeHTTPServer(object):
         self.args = args
         self.kwargs = kwargs
         self.storageengine = kwargs.get('storagedriver',None)
-        self.state = KaleidoscopeState(storagedriver)
+        self.state = KaleidoscopeStateManager(self.storageengine)
         self.version = self._app_version()
         self.app = web.Application()
 
@@ -51,7 +50,3 @@ class KaleidoscopeHTTPServer(object):
         self.app.router.add_post('/', handle)
         # app.router.add_get('/', serveapp) TODO
         web.run_app(self.app, port=os.environ.get('PORT',8080))
-
-
-def utcisodatestr():
-    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
